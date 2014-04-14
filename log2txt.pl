@@ -71,7 +71,7 @@ sub sysloghash2csv {
 	my $r = '';
 
 	delete $d{'pri'};
-	$r = $d{'ts'} . ',' . $d{'host'} . ','. $d{'proc'};
+	$r = '"' . $d{'ts'} . '","' . $d{'host'} . '","'. $d{'proc'} . '"';
 	delete @d{'ts', 'host', 'proc'};
 	foreach $f (@$k[3..(scalar(@$k) - 1)]) {
 # print $f, "\n";
@@ -102,12 +102,14 @@ sub log2txt_test {
 	# test syslog2hash
 	my %d, $s;
 	my @k = ('ts', 'host', 'proc', 'id', 'severity', 'sys', 'sub', 'name', 'action', 'method', 'srcip', 'dstip', 'user', 'statuscode', 'cached', 'profile', 'filteraction', 'size', 'request', 'url', 'exceptions', 'error', 'authtime', 'dnstime', 'cattime', 'avscantime', 'fullreqtime', 'device', 'auth', 'reason', 'category', 'reputation', 'categoryname', 'content-type', 'application', 'function', 'file', 'line', 'message', 'msg');
+	print join(',', @k), "\n";
 	while (<STDIN>) {
 		%d = syslog2hash($_);
 		# print ($d{'ts'}, ',', $d{'host'}, ',', $d{'proc'} , "\n");
 		# now test sysloghash2csv
-		# print sysloghash2csv(\%d, \@k);
 		$s = sysloghash2csv(\%d, \@k);
+		print $s;
+		# %d = ();	# should already be empty and unnecessary
 	}
 	# print "FinalKeys\n";
 	print join(',', @k), "\n";
