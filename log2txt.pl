@@ -38,6 +38,7 @@ sub syslogmsg2hash {
 		if (!(($e eq '') or ($e eq ' '))) {
 # print '-', $e, "-\n";
 			($f, $v) = split(/=/, $e, 2);
+# print "adding '$f' = '$v' \n";
 			$d{$f} = $v;
 		}
 	}
@@ -70,6 +71,7 @@ sub syslog2hash {
 sub sysloghash2csv {
 	my ($d, $k) = @_;
 	my $r = '';
+	my $dkc;
 
 	delete $d{'pri'};
 	$r = '"' . $d{'ts'} . '","' . $d{'host'} . '","'. $d{'proc'} . '"';
@@ -84,8 +86,11 @@ sub sysloghash2csv {
 		}
 	}
 # print join(';', keys %d), "\n";
+$dkc = %d;
+if ( ${%d} > 0) { print join(';', keys %d), "\n"; }
 # print join('_', @$k), "\n";
 	foreach $f (keys %d) {
+# print "New key '$f' \n";
 		push @$k, $f;
 		$r .= ',' . $d{$f};
 		delete $d{$f};
