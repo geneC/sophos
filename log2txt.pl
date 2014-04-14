@@ -24,6 +24,7 @@ sub syslog2msg {
 		$pri='';
 	}
 	($ts, $host, $proc, $msg) = split(/ /, $rems, 4);
+	chomp($ts, $host, $proc);
 	return ($pri, $ts, $host, $proc, $msg);
 }
 
