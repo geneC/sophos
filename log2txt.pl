@@ -31,7 +31,7 @@ sub syslogmsg2hash {
 	my ($ins) = @_;
 	my %d, $msg, @s, $e, $f, $v;
 
-	@s = split(/([-a-z]+="(?:|.*?[^\\])") ?/, $ins);
+	@s = split(/([-a-z]+="(?:|.*?[^\\])")(?: |$)/, $ins);
 	$msg = $s[scalar(@s)-1];	# will contain \n
 	foreach $e (@s[0..(scalar(@s) - 2)]) {
 		if (!(($e eq '') or ($e eq ' '))) {
@@ -101,7 +101,7 @@ sub log2txt_test {
 
 	# test syslog2hash
 	my %d, $s;
-	my @k = ('ts', 'host', 'proc', 'id', 'severity', 'sys', 'sub', 'name', 'action', 'method', 'srcip', 'dstip', 'user', 'statuscode', 'cached', 'profile', 'filteraction', 'size', 'request', 'url', 'exceptions', 'error', 'authtime', 'dnstime', 'cattime', 'avscantime', 'fullreqtime', 'device', 'auth', 'reason', 'category', 'reputation', 'categoryname', 'content-type', 'function', 'file', 'line', 'message', 'msg');
+	my @k = ('ts', 'host', 'proc', 'id', 'severity', 'sys', 'sub', 'name', 'action', 'method', 'srcip', 'dstip', 'user', 'statuscode', 'cached', 'profile', 'filteraction', 'size', 'request', 'url', 'exceptions', 'error', 'authtime', 'dnstime', 'cattime', 'avscantime', 'fullreqtime', 'device', 'auth', 'reason', 'category', 'reputation', 'categoryname', 'content-type', 'application', 'function', 'file', 'line', 'message', 'msg');
 	while (<STDIN>) {
 		%d = syslog2hash($_);
 		# print ($d{'ts'}, ',', $d{'host'}, ',', $d{'proc'} , "\n");
@@ -109,7 +109,8 @@ sub log2txt_test {
 		# print sysloghash2csv(\%d, \@k);
 		$s = sysloghash2csv(\%d, \@k);
 	}
-	print "FinalKeys\n" , join(',', @k), "\n";
+	# print "FinalKeys\n";
+	print join(',', @k), "\n";
 }
 
 sub log2txt_main {
