@@ -101,8 +101,8 @@ sub log2txt_test {
 # 	}
 
 	# test syslog2hash
-	my %d, $s, $kc;
-	my @k = ('ts', 'host', 'proc', 'id', 'severity', 'sys', 'sub', 'name', 'action', 'method', 'srcip', 'dstip', 'user', 'statuscode', 'cached', 'profile', 'filteraction', 'size', 'request', 'url', 'exceptions', 'error', 'authtime', 'dnstime', 'cattime', 'avscantime', 'fullreqtime', 'device', 'auth', 'reason', 'category', 'reputation', 'categoryname', 'content-type', 'application', 'function', 'file', 'line', 'message', 'msg');
+	my %d, @k, $s, $kc;
+	@k = ('ts', 'host', 'proc', 'id', 'severity', 'sys', 'sub', 'name', 'action', 'method', 'srcip', 'dstip', 'user', 'statuscode', 'cached', 'profile', 'filteraction', 'size', 'request', 'url', 'exceptions', 'error', 'authtime', 'dnstime', 'cattime', 'avscantime', 'fullreqtime', 'device', 'auth', 'reason', 'category', 'reputation', 'categoryname', 'extension', 'filename', 'content-type', 'application', 'function', 'file', 'line', 'message', 'msg');
 	print join(',', @k), "\n";
 	$kc = @k;
 	while (<STDIN>) {
@@ -113,8 +113,8 @@ sub log2txt_test {
 		print $s;
 		# %d = ();	# should already be empty and unnecessary
 	}
-	# print "FinalKeys\n";
 	if ( scalar(@k) > $kc) {
+		# print "FinalKeys\n";
 		print join(',', @k), "\n";
 	}
 }
