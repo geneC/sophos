@@ -35,9 +35,12 @@ sub syslogmsg2hash {
 # 	@s = split(/([-a-z]+="(?:|.*?[^\\])")(?: |$)/, $ins);
 # 	@s = split(/([-a-z]+="(?:|.*?)")(?: |$)/, $ins);
 # 	@s = split(/([-a-z]+="(?:.*?)")(?: |$)/o, $ins);
+#xx	@s = split(/(.+?=".*?")(?: |$)/o, $ins);	# Syntactically incorrect
+# 	@s = split(/([^" ]+?=".*?")(?: |$)/o, $ins);
+# 	@s = split(/([-a-z]+=".*?") ?/o, $ins);
 	@s = split(/([-a-z]+=".*?")(?: |$)/o, $ins);
 	$l = @s - 2;
-	$msg = $s[scalar(@s)-1];	# will contain \n
+	$msg = $s[$l+1];	# will contain \n
 	foreach $e (@s[0..$l]) {
 		if (!(($e eq '') or ($e eq ' '))) {
 		# if (!(($e =~ /^ ?$/))) {
