@@ -30,12 +30,17 @@ sub syslog2msg {
 
 sub syslogmsg2hash {
 	my ($ins) = @_;
-	my %d, $msg, @s, $e, $f, $v;
+	my %d, $msg, @s, $e, $f, $v, $l;
 
-	@s = split(/([-a-z]+="(?:|.*?[^\\])")(?: |$)/, $ins);
+# 	@s = split(/([-a-z]+="(?:|.*?[^\\])")(?: |$)/, $ins);
+# 	@s = split(/([-a-z]+="(?:|.*?)")(?: |$)/, $ins);
+# 	@s = split(/([-a-z]+="(?:.*?)")(?: |$)/o, $ins);
+	@s = split(/([-a-z]+=".*?")(?: |$)/o, $ins);
+	$l = @s - 2;
 	$msg = $s[scalar(@s)-1];	# will contain \n
-	foreach $e (@s[0..(scalar(@s) - 2)]) {
+	foreach $e (@s[0..$l]) {
 		if (!(($e eq '') or ($e eq ' '))) {
+		# if (!(($e =~ /^ ?$/))) {
 # print '-', $e, "-\n";
 			($f, $v) = split(/=/, $e, 2);
 # print "adding '$f' = '$v' \n";
