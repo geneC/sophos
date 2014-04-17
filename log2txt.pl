@@ -119,6 +119,20 @@ sub syslog2csv {
 	return $r;
 }
 
+sub syslog2csvd {
+	my ($ins, @k) = @_;
+	my ($pri, $rems, $ts, $host, $proc, $body, $msg, @d, $re);
+	my ($r);
+
+# print join(',', @k) . "\n";
+	($pri, $ts, $host, $proc, $body) = syslog2msg($ins);
+	$re = '(?:' . join('="(.*?)" ?)?(?:', @k[3..(scalar(@k) - 1)]). '="(.*?)" ?)?';
+# print $re . "\n";
+	@d = ($body =~ m/$re/o);	#(.*?)$
+	$r = '"' . $ts . '","' . $host . '","'. $proc . '","' . join('","', @d) . "\"\n";
+	return $r;
+}
+
 sub log2txt_test {
 	# test syslog2msg
 # 	while (<STDIN>) {
