@@ -15,7 +15,7 @@
 
 sub syslog2msg {
 	my ($ins) = @_;
-	my $pri, $rems, $ts, $host, $proc, $msg;
+	my ($pri, $rems, $ts, $host, $proc, $msg);
 
 	if ($ins =~ /^<\d{1,3}>\s.*/) {
 		($pri, $rems) = ($ins =~ /^<(\d+)>\s+(.*)/);
@@ -30,7 +30,7 @@ sub syslog2msg {
 
 sub syslogmsg2hash {
 	my ($ins) = @_;
-	my %d, $msg, @s, $e, $f, $v, $l;
+	my (%d, $msg, @s, $e, $f, $v, $l);
 
 # 	@s = split(/([-a-z]+="(?:|.*?[^\\])")(?: |$)/, $ins);
 # 	@s = split(/([-a-z]+="(?:|.*?)")(?: |$)/, $ins);
@@ -56,11 +56,12 @@ sub syslogmsg2hash {
 
 sub syslog2hash {
 	my ($ins) = @_;
-	my $pri, $rems, $ts, $host, $proc, $body, $msg, %d;
-	my $f, $nf, $i = 1;	# field, new field, index
+	my ($pri, $rems, $ts, $host, $proc, $body, $msg, %d);
+	my ($f, $nf, $i);	# field, new field, index
 
 	($pri, $ts, $host, $proc, $body) = syslog2msg($ins);
 	($msg, %d) = syslogmsg2hash($body);
+	$i = 1;
 	foreach $f ('pri', 'ts', 'host', 'proc', 'msg') {
 		if (exists $d{$f}) {
 			$nf = $f . $i++;
@@ -78,8 +79,8 @@ sub syslog2hash {
 
 sub sysloghash2csv {
 	my ($d, $k) = @_;
-	my $r = '';
-	my $dkc;
+	my ($r, $f);
+	my ($dkc);
 
 	delete $d{'pri'};
 	$r = '"' . $d{'ts'} . '","' . $d{'host'} . '","'. $d{'proc'} . '"';
@@ -114,7 +115,7 @@ sub log2txt_test {
 # 	}
 
 	# test syslog2hash
-	my %d, @k, $s, $kc;
+	my (%d, @k, $s, $kc);
 	@k = ('ts', 'host', 'proc', 'id', 'severity', 'sys', 'sub', 'name', 'action', 'method', 'srcip', 'dstip', 'user', 'statuscode', 'cached', 'profile', 'filteraction', 'size', 'request', 'url', 'exceptions', 'error', 'authtime', 'dnstime', 'cattime', 'avscantime', 'fullreqtime', 'device', 'auth', 'reason', 'category', 'reputation', 'categoryname', 'extension', 'filename', 'content-type', 'application', 'function', 'file', 'line', 'message', 'msg');
 	print join(',', @k), "\n";
 	$kc = @k;
