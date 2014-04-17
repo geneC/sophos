@@ -108,6 +108,17 @@ if ( ${%d} > 0) { print join(';', keys %d), "\n"; }
 	return $r;
 }
 
+sub syslog2csv {
+	my ($ins) = @_;
+	my ($pri, $rems, $ts, $host, $proc, $body, $msg, @d);
+	my ($r);
+
+	($pri, $ts, $host, $proc, $body) = syslog2msg($ins);
+	@d = ($body =~ m/(?:id="(.*?)" )(?:severity="(.*?)" )(?:sys="(.*?)" )(?:sub="(.*?)" )(?:name="(.*?)" )?(?:action="(.*?)" )?(?:method="(.*?)" )?(?:srcip="(.*?)" )?(?:dstip="(.*?)" )?(?:user="(.*?)" )?(?:statuscode="(.*?)" )?(?:cached="(.*?)" )?(?:profile="(.*?)" )?(?:filteraction="(.*?)" )?(?:size="(.*?)" )?(?:request="(.*?)" )?(?:url="(.*?)" )?(?:exceptions="(.*?)" )?(?:error="(.*?)" )?(?:authtime="(.*?)" )?(?:dnstime="(.*?)" )?(?:cattime="(.*?)" )?(?:avscantime="(.*?)" )?(?:fullreqtime="(.*?)" )?(?:device="(.*?)" )?(?:auth="(.*?)" )?(?:reason="(.*?)" ?)?(?:category="(.*?)" )?(?:reputation="(.*?)" )?(?:categoryname="(.*?)" ?)?(?:extension="(.*?)" )?(?:filename="(.*?)" )?(?:content-type="(.*?)" ?)?(?:application="(.*?)" ?)?(?:function="(.*?)" )?(?:file="(.*?)" )?(?:line="(.*?)" )?(?:message="(.*?)" ?)?(.*?)$/o);	#(.*?)$
+	$r = '"' . $ts . '","' . $host . '","'. $proc . '","' . join('","', @d) . "\"\n";
+	return $r;
+}
+
 sub log2txt_test {
 	# test syslog2msg
 # 	while (<STDIN>) {
