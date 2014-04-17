@@ -86,10 +86,10 @@ sub sysloghash2csv {
 	$r = '"' . $d{'ts'} . '","' . $d{'host'} . '","'. $d{'proc'} . '"';
 	delete @d{'ts', 'host', 'proc'};
 	foreach $f (@$k[3..(scalar(@$k) - 1)]) {
-# print $f, "\n";
-		if (exists$d{$f}) {
-			$r .= ',' . $d{$f};
-			delete $d{$f};
+# print ($f . '"="' . $$d{$f} . "\"\n");
+		if (exists $$d{$f}) {
+			$r .= ',' . $$d{$f};
+			delete $$d{$f};
 		} else {
 			$r .= ',';
 		}
@@ -101,8 +101,8 @@ if ( ${%d} > 0) { print join(';', keys %d), "\n"; }
 	foreach $f (keys %d) {
 # print "New key '$f' \n";
 		push @$k, $f;
-		$r .= ',' . $d{$f};
-		delete $d{$f};
+		$r .= ',' . $$d{$f};
+		delete $$d{$f};
 	}
 	$r .=  "\n";	# msg had \n chomp()'d
 	return $r;
