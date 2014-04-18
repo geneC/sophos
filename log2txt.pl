@@ -114,7 +114,9 @@ sub syslog2csv {
 	my ($r);
 
 	($pri, $ts, $host, $proc, $body) = syslog2msg($ins);
-	@d = ($body =~ m/(?:id="(.*?)" )(?:severity="(.*?)" )(?:sys="(.*?)" )(?:sub="(.*?)" )(?:name="(.*?)" )?(?:action="(.*?)" )?(?:method="(.*?)" )?(?:srcip="(.*?)" )?(?:dstip="(.*?)" )?(?:user="(.*?)" )?(?:statuscode="(.*?)" )?(?:cached="(.*?)" )?(?:profile="(.*?)" )?(?:filteraction="(.*?)" )?(?:size="(.*?)" )?(?:request="(.*?)" )?(?:url="(.*?)" )?(?:exceptions="(.*?)" )?(?:error="(.*?)" )?(?:authtime="(.*?)" )?(?:dnstime="(.*?)" )?(?:cattime="(.*?)" )?(?:avscantime="(.*?)" )?(?:fullreqtime="(.*?)" )?(?:device="(.*?)" )?(?:auth="(.*?)" )?(?:reason="(.*?)" ?)?(?:category="(.*?)" )?(?:reputation="(.*?)" )?(?:categoryname="(.*?)" ?)?(?:extension="(.*?)" )?(?:filename="(.*?)" )?(?:content-type="(.*?)" ?)?(?:application="(.*?)" ?)?(?:function="(.*?)" )?(?:file="(.*?)" )?(?:line="(.*?)" )?(?:message="(.*?)" ?)?(.*?)$/o);	#(.*?)$
+	$body =~ s/" reputation="(.*?)(" category=".*?" reputation=")(.*?" ?)/\2\1;\3/o;
+	$body =~ s/( category=".*?" .*?)( reason=".*?")$/\2\1/o;
+	@d = ($body =~ m/(?:id="(.*?)" )(?:severity="(.*?)" )(?:sys="(.*?)" )(?:sub="(.*?)" )(?:name="(.*?)" )?(?:action="(.*?)" )?(?:method="(.*?)" )?(?:srcip="(.*?)" )?(?:dstip="(.*?)" )?(?:user="(.*?)" )?(?:statuscode="(.*?)" )?(?:cached="(.*?)" )?(?:profile="(.*?)" )?(?:filteraction="(.*?)" )?(?:size="(.*?)" )?(?:request="(.*?)" )?(?:url="(.*?)" )?(?:exceptions="(.*?)" )?(?:error="(.*?)" ?)?(?:authtime="(.*?)" )?(?:dnstime="(.*?)" )?(?:cattime="(.*?)" )?(?:avscantime="(.*?)" )?(?:fullreqtime="(.*?)" )?(?:device="(.*?)" )?(?:auth="(.*?)" )?(?:reason="(.*?)" ?)?(?:category="(.*?)" )?(?:reputation="(.*?)" )?(?:categoryname="(.*?)" ?)?(?:extension="(.*?)" )?(?:filename="(.*?)" ?)?(?:content-type="(.*?)" ?)?(?:application="(.*?)" ?)?(?:function="(.*?)" )?(?:file="(.*?)" )?(?:line="(.*?)" )?(?:message="(.*?)" ?)?(.*?)$/o);	#(.*?)$
 	$r = '"' . $ts . '","' . $host . '","'. $proc . '","' . join('","', @d) . "\"\n";
 	return $r;
 }
@@ -126,9 +128,11 @@ sub syslog2csvd {
 
 # print join(',', @k) . "\n";
 	($pri, $ts, $host, $proc, $body) = syslog2msg($ins);
-	$re = '(?:' . join('="(.*?)" ?)?(?:', @k[3..(scalar(@k) - 1)]). '="(.*?)" ?)?';
+	$body =~ s/" reputation="(.*?)(" category=".*?" reputation=")(.*?" ?)/\2\1;\3/;
+	$body =~ s/( category=".*?" .*?)( reason=".*?")$/\2\1/o;
+	$re = '(?:' . join('="(.*?)"(?: |$))?(?:', @k[3..(scalar(@k) - 2)]). '="(.*?)"(?: |$))?';
 # print $re . "\n";
-	@d = ($body =~ m/$re/o);	#(.*?)$
+	@d = ($body =~ m/^$re(.*?)$/o);	#(.*?)$
 	$r = '"' . $ts . '","' . $host . '","'. $proc . '","' . join('","', @d) . "\"\n";
 	return $r;
 }
@@ -141,16 +145,18 @@ sub log2txt_test {
 
 	# test syslog2hash
 	my (%d, @k, $s, $kc);
-	@k = ('ts', 'host', 'proc', 'id', 'severity', 'sys', 'sub', 'name', 'action', 'method', 'srcip', 'dstip', 'user', 'statuscode', 'cached', 'profile', 'filteraction', 'size', 'request', 'url', 'exceptions', 'error', 'authtime', 'dnstime', 'cattime', 'avscantime', 'fullreqtime', 'device', 'auth', 'reason', 'category', 'reputation', 'categoryname', 'extension', 'filename', 'content-type', 'application', 'function', 'file', 'line', 'message', 'msg');
+	@k = ('ts', 'host', 'proc', 'id', 'severity', 'sys', 'sub', 'name', 'action', 'method', 'srcip', 'dstip', 'user', 'statuscode', 'cached', 'profile', 'filteraction', 'size', 'request', 'url', 'exceptions', 'error', 'authtime', 'dnstime', 'cattime', 'avscantime', 'fullreqtime', 'device', 'auth', 'extension', 'filename', 'reason', 'category', 'reputation', 'categoryname', 'content-type', 'application', 'function', 'file', 'line', 'message', 'msg');
 	print join(',', @k), "\n";
 	$kc = @k;
 	while (<STDIN>) {
-		%d = syslog2hash($_);
-		# print ($d{'ts'}, ',', $d{'host'}, ',', $d{'proc'} , "\n");
-		# now test sysloghash2csv
-		$s = sysloghash2csv(\%d, \@k);
+# 		%d = syslog2hash($_);
+# 		# print ($d{'ts'}, ',', $d{'host'}, ',', $d{'proc'} , "\n");
+# 		# now test sysloghash2csv
+# 		$s = sysloghash2csv(\%d, \@k);
+# 		# %d = ();	# should already be empty and unnecessary
+		$s = syslog2csv($_);
+# 		$s = syslog2csvd($_, @k);
 		print $s;
-		# %d = ();	# should already be empty and unnecessary
 	}
 	if ( scalar(@k) > $kc) {
 		# print "FinalKeys\n";
