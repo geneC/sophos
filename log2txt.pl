@@ -195,15 +195,24 @@ if ( ${%d} > 0) { print join(';', keys %d), "\n"; }
 	return $r;
 }
 
+sub syslogbody_fixup {
+	${$_[0]} =~ s/" reputation="(.*?)(" category=".*?" reputation=")(.*?" ?)/\2\1;\3/o;
+	${$_[0]} =~ s/( category=".*?" .*?)( reason=".*?")$/\2\1/o;
+	${$_[0]} =~ s/^(.*?)(id=".*?" .*?)$/\2 \1/o;
+	${$_[0]} =~ s/( name=".*?"(?: action=".*?")?)( user=".*?".*?)( method=".*?")/\1\3\2/o;
+	${$_[0]} =~ s/( user=".*?")( srcip=".*?"(?: dstip=".*?")?)/\2\1/o;
+}
+
+sub syslogbody2arr {
 sub syslog2csv {
 	my ($ins) = @_;
 	my ($pri, $rems, $ts, $host, $proc, $body, $msg, @d);
 	my ($r);
 
 	($pri, $ts, $host, $proc, $body) = syslog2msg($ins);
-	$body =~ s/" reputation="(.*?)(" category=".*?" reputation=")(.*?" ?)/\2\1;\3/o;
-	$body =~ s/( category=".*?" .*?)( reason=".*?")$/\2\1/o;
-	@d = ($body =~ m/(?:id="(.*?)" )(?:severity="(.*?)" )(?:sys="(.*?)" )(?:sub="(.*?)" )(?:name="(.*?)" )?(?:action="(.*?)" )?(?:method="(.*?)" )?(?:srcip="(.*?)" )?(?:dstip="(.*?)" )?(?:user="(.*?)" )?(?:statuscode="(.*?)" )?(?:cached="(.*?)" )?(?:profile="(.*?)" )?(?:filteraction="(.*?)" )?(?:size="(.*?)" )?(?:request="(.*?)" )?(?:url="(.*?)" )?(?:exceptions="(.*?)" )?(?:error="(.*?)" ?)?(?:authtime="(.*?)" )?(?:dnstime="(.*?)" )?(?:cattime="(.*?)" )?(?:avscantime="(.*?)" )?(?:fullreqtime="(.*?)" )?(?:device="(.*?)" )?(?:auth="(.*?)" )?(?:reason="(.*?)" ?)?(?:category="(.*?)" )?(?:reputation="(.*?)" )?(?:categoryname="(.*?)" ?)?(?:extension="(.*?)" )?(?:filename="(.*?)" ?)?(?:content-type="(.*?)" ?)?(?:application="(.*?)" ?)?(?:function="(.*?)" )?(?:file="(.*?)" )?(?:line="(.*?)" )?(?:message="(.*?)" ?)?(.*?)$/o);	#(.*?)$
+# 	$body =~ s/" reputation="(.*?)(" category=".*?" reputation=")(.*?" ?)/\2\1;\3/o;
+# 	$body =~ s/( category=".*?" .*?)( reason=".*?")$/\2\1/o;
+	syslogbody_fixup(\$body);
 	$r = '"' . $ts . '","' . $host . '","'. $proc . '","' . join('","', @d) . "\"\n";
 	return $r;
 }
@@ -215,8 +224,7 @@ sub syslog2csvd {
 
 # print join(',', @k) . "\n";
 	($pri, $ts, $host, $proc, $body) = syslog2msg($ins);
-	$body =~ s/" reputation="(.*?)(" category=".*?" reputation=")(.*?" ?)/\2\1;\3/;
-	$body =~ s/( category=".*?" .*?)( reason=".*?")$/\2\1/o;
+	syslogbody_fixup(\$body);
 	$re = '(?:' . join('="(.*?)"(?: |$))?(?:', @k[3..(scalar(@k) - 2)]). '="(.*?)"(?: |$))?';
 # print $re . "\n";
 	@d = ($body =~ m/^$re(.*?)$/o);	#(.*?)$
