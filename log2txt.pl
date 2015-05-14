@@ -13,6 +13,8 @@
 
 # This list is based on the fields in http.log from UTM-9.2 for pass/block plus error
 
+# use strict;
+
 sub syslog2msg {
 	my ($ins) = @_;
 	my ($pri, $rems, $ts, $host, $proc, $msg);
