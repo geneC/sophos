@@ -96,6 +96,45 @@ sub syslogmsg2hash {
 	return ($msg, %d);
 }
 
+sub syslogmsgh2hash {
+	my ($ins, $d) = @_;
+	my ($msg, @s, $e, $f, $v, $l);
+
+# print "    --in '" . join("','", values $d) . "'\n";
+# print "    --host='" . ${$d}{host} . "'\n";
+
+# 	@s = split(/([-a-z]+="(?:|.*?[^\\])")(?: |$)/, $ins);
+# 	@s = split(/([-a-z]+="(?:|.*?)")(?: |$)/, $ins);
+# 	@s = split(/([-a-z]+="(?:.*?)")(?: |$)/o, $ins);
+#xx	@s = split(/(.+?=".*?")(?: |$)/o, $ins);	# Syntactically incorrect
+# 	@s = split(/([^" ]+?=".*?")(?: |$)/o, $ins);
+# 	@s = split(/([-a-z]+=".*?") ?/o, $ins);
+	@s = split(/([-a-z]+=".*?")(?: |$)/o, $ins);
+	$l = @s - 2;
+	$msg = $s[$l+1];	# will contain \n
+	foreach $e (@s[0..$l]) {
+		if (!(($e eq '') or ($e eq ' '))) {
+		# if (!(($e =~ /^ ?$/))) {
+# print '-', $e, "-\n";
+			($f, $v) = split(/=/, $e, 2);
+# print "adding '$f' = '$v' \n";
+# 			if (exists $$d{$f}) {
+# 				$i = 1;
+# 				$nf = $f . $i++;
+# 				while (exists $$d{$nf}) {
+# 					$nf = $f . $i++;
+# 					last if ($i > 100);
+# 				}
+# 				$f = $nf;
+# 			}
+			${$d}{$f} = $v;
+		}
+	}
+# print "    --out '" . join("','", values $d) . "'\n";
+	chomp($msg);
+	return ($msg, %$d);
+}
+
 sub syslogmsg2hash_select {
 	return syslogmsg2hash_split(@_);
 # 	return syslogmsg2hash_matop1 @_;
