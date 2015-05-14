@@ -30,6 +30,46 @@ sub syslog2msg {
 	return ($pri, $ts, $host, $proc, $msg);
 }
 
+sub syslogmsg2hash_matop1 {
+	my ($ins) = @_;
+	my (%d, $f, $v);
+
+	($f, $ins) = ($ins =~ m/^([-a-z]+)=(.*)$/o );
+	if ($f =~ /./ ) {
+		($v, $ins) = ($ins =~ m/^(".*?")(?: |$)(.*)$/o );
+	}
+# print "got '$f' = '$v'\n";
+	while ($v =~ /./ ) {
+# print "adding '$f' = '$v'\n";
+		$d{$f} = $v;
+		($f, $ins) = ($ins =~ m/^([-a-z]+)=(.*)$/o );
+		if ($f =~ /./ ) {
+			($v, $ins) = ($ins =~ m/^(".*?")(?: |$)(.*)$/o );
+		} else {
+			$v = '';
+		}
+# print "got '$f' = '$v'\n";
+	}
+	chomp($ins);
+	return ($ins, %d);
+}
+
+sub syslogmsg2hash_matop2 {
+	my ($ins) = @_;
+	my (%d, $f, $v);
+
+	($f, $v, $ins) = ($ins =~ m/^(?:([-a-z]+)=(".*?")(?: |$))?(.*)$/o );
+# print "got '$f' = '$v'\n";
+	while ($v =~ /./ ) {
+# print "adding '$f' = '$v'\n";
+		$d{$f} = $v;
+		($f, $v, $ins) = ($ins =~ m/^(?:([-a-z]+)=(".*?")(?: |$))?(.*)$/o );
+# print "got '$f' = '$v'\n";
+	}
+	chomp($ins);
+	return ($ins, %d);
+}
+
 sub syslogmsg2hash {
 	my ($ins) = @_;
 	my (%d, $msg, @s, $e, $f, $v, $l);
@@ -54,6 +94,12 @@ sub syslogmsg2hash {
 	}
 	chomp($msg);
 	return ($msg, %d);
+}
+
+sub syslogmsg2hash_select {
+	return syslogmsg2hash_split(@_);
+# 	return syslogmsg2hash_matop1 @_;
+# 	return syslogmsg2hash_matop2 @_;
 }
 
 sub syslog2hash {
