@@ -169,24 +169,25 @@ sub sysloghash2csv {
 	my ($r, $f);
 	my ($dkc);
 
-	delete $d{'pri'};
-	$r = '"' . $d{'ts'} . '","' . $d{'host'} . '","'. $d{'proc'} . '"';
-	delete @d{'ts', 'host', 'proc'};
+# print "val-" . join(',', values %$d) . "\"\n";
+	delete $$d{'pri'};
+	$r = '"' . $$d{'ts'} . '","' . $$d{'host'} . '","'. $$d{'proc'} . '"';
+	delete @$d{'ts', 'host', 'proc'};
 	foreach $f (@$k[3..(scalar(@$k) - 1)]) {
 # print ($f . '"="' . $$d{$f} . "\"\n");
 		if (exists $$d{$f}) {
 			$r .= ',' . $$d{$f};
 			delete $$d{$f};
 		} else {
-			$r .= ',';
+			$r .= ',""';
 		}
 	}
 # print join(';', keys %d), "\n";
 $dkc = %d;
 if ( ${%d} > 0) { print join(';', keys %d), "\n"; }
 # print join('_', @$k), "\n";
-	foreach $f (keys %d) {
-# print "New key '$f' \n";
+	foreach $f (keys %$d) {
+print "New key '$f' \n";
 		push @$k, $f;
 		$r .= ',' . $$d{$f};
 		delete $$d{$f};
