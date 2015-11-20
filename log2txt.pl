@@ -147,20 +147,40 @@ sub syslog2hash {
 	my ($f, $nf, $i);	# field, new field, index
 
 	($pri, $ts, $host, $proc, $body) = syslog2msg($ins);
-	($msg, %d) = syslogmsg2hash($body);
-	$i = 1;
-	foreach $f ('pri', 'ts', 'host', 'proc', 'msg') {
-		if (exists $d{$f}) {
+#$msg = $body;
+# print "    --got '$pri' '$ts' '$host' '$proc'\n";
+# 	($msg, %d) = syslogmsg2hash($body);
+	%d = (pri=>$pri, ts=>$ts, host=>$host, proc=>$proc);
+	($msg, %d) = syslogmsgh2hash($body, \%d);
+# print "    --hash '" . join("','", values %d) . "'\n";
+# 	no strict "refs";
+# 	foreach $f ('pri', 'ts', 'host', 'proc', 'msg') {
+# 		if (exists $d{$f}) {
+# 			$i = 1;
+# 			$nf = $f . $i++;
+# 			while (exists $d{$nf}) {
+# 				$nf = $f . $i++;
+# 				last if ($i > 100);
+# 			}
+# 			$d{$nf} = $d{$f};
+# 			delete $d{$f};
+# 		}
+# 		$d{$f} = ${$f};
+# print "  --add '$f' = '" . $$f . "'\n";
+# 	}
+	$f = 'msg';
+	if (exists $d{$f}) {
+		$i = 1;
+		$nf = $f . $i++;
+		while (exists $d{$nf}) {
 			$nf = $f . $i++;
-			while (exists $d{$nf}) {
-				$nf = $f . $i++;
-				last if ($i > 100);
-			}
-			$d{$nf} = $d{$f};
-			delete $d{$f};
+			last if ($i > 100);
 		}
-		$d{$f} = ${$f};
+		$d{$nf} = $d{$f};
+		delete $d{$f};
 	}
+	$d{$f} = "\"$msg\"";
+# print "val-" . join(',', values %$d) . "\"\n";
 	return %d;
 }
 
