@@ -279,17 +279,25 @@ sub log2txt_test {
 
 	# test syslog2hash
 	my (%d, @k, $s, $kc);
-	@k = ('ts', 'host', 'proc', 'id', 'severity', 'sys', 'sub', 'name', 'action', 'method', 'srcip', 'dstip', 'user', 'statuscode', 'cached', 'profile', 'filteraction', 'size', 'request', 'url', 'exceptions', 'error', 'authtime', 'dnstime', 'cattime', 'avscantime', 'fullreqtime', 'device', 'auth', 'extension', 'filename', 'reason', 'category', 'reputation', 'categoryname', 'content-type', 'application', 'function', 'file', 'line', 'message', 'msg');
-	print join(',', @k), "\n";
+	# @k = ('ts', 'host', 'proc', 'id', 'severity', 'sys', 'sub', 'name', 'action', 'method', 'srcip', 'dstip', 'user', 'statuscode', 'cached', 'profile', 'filteraction', 'size', 'request', 'url', 'exceptions', 'error', 'authtime', 'dnstime', 'cattime', 'avscantime', 'fullreqtime', 'device', 'auth', 'extension', 'filename', 'reason', 'category', 'reputation', 'categoryname', 'content-type', 'application', 'function', 'file', 'line', 'caller', 'engine', 'message', 'msg');
+	@k = ('ts', 'host', 'proc', 'id', 'severity', 'sys', 'sub', 'name', 'action', 'method', 'fwrule', 'initf', 'outitf', 'srcmac', 'dstmac', 'srcip', 'dstip', 'user', 'statuscode', 'cached', 'profile', 'filteraction', 'size', 'request', 'url', 'exceptions', 'error', 'authtime', 'dnstime', 'cattime', 'avscantime', 'fullreqtime', 'device', 'auth', 'reason', 'category', 'reputation', 'categoryname', 'extension', 'filename', 'content-type', 'application', 'sid', 'facility', 'client', 'pid', 'call', 'result', 'lock', 'storage', 'function', 'file', 'line', 'caller', 'engine', 'proto', 'length', 'tos', 'prec', 'ttl', 'srcport', 'dstport', 'tcpflags', 'type', 'code', 'message', 'msg');
+# 	print join(',', @k), "\n";
+# 	print '"', join('","', @k), "\"\n";
+	print '"', join('"	"', @k), "\"\n";
 	$kc = @k;
+# my $re;
+# $re = '(?:' . join('="(.*?)" ?)?(?:', @k[3..(scalar(@k) - 2)]). '="(.*?)" ?)?';
+# print $re . "\n";
 	while (<STDIN>) {
 # 		%d = syslog2hash($_);
 # 		# print ($d{'ts'}, ',', $d{'host'}, ',', $d{'proc'} , "\n");
 # 		# now test sysloghash2csv
+# # print "    --hash2 '" . join("','", values %d) . "'\n";
 # 		$s = sysloghash2csv(\%d, \@k);
-# 		# %d = ();	# should already be empty and unnecessary
-		$s = syslog2csv($_);
+		# %d = ();	# should already be empty and unnecessary
+# 		$s = syslog2csv($_);
 # 		$s = syslog2csvd($_, @k);
+		$s = syslog2tsv($_);
 		print $s;
 	}
 	if ( scalar(@k) > $kc) {
