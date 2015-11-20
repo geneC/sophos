@@ -222,6 +222,18 @@ sub syslog2csv {
 	return $r;
 }
 
+sub syslog2tsv {
+	my ($ins) = @_;
+	my ($pri, $rems, $ts, $host, $proc, $body, $msg, @d);
+	my ($r);
+
+	($pri, $ts, $host, $proc, $body) = syslog2msg($ins);
+	syslogbody_fixup(\$body);
+	@d = syslogbody2arr(\$body);
+	$r = '"' . $ts . '"	"' . $host . '"	"'. $proc . '"	"' . join('"	"', @d) . "\"\n";
+	return $r;
+}
+
 sub syslog2csvd {
 	my ($ins, @k) = @_;
 	my ($pri, $rems, $ts, $host, $proc, $body, $msg, @d, $re);
