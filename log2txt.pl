@@ -222,6 +222,7 @@ sub syslogbody_fixup {
 	${$_[0]} =~ s/^(.*?)(id=".*?" .*?)$/\2 \1/o;
 	${$_[0]} =~ s/( name=".*?"(?: action=".*?")?)( user=".*?".*?)( method=".*?")/\1\3\2/o;
 	${$_[0]} =~ s/( user=".*?")( srcip=".*?"(?: dstip=".*?")?)/\2\1/o;
+	${$_[0]} =~ s/( exceptions=".*?" .*?)( ua=".*?")$/\2\1/o;
 }
 
 sub syslogbody2arr {
