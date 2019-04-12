@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # log2txt.pl
-# Copyright 2014, Gene Cumm <genecumm@gmail.com>
+# Copyright 2014-2019, Gene Cumm <genecumm@gmail.com>
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,6 +12,7 @@
 # Parse Sophos UTM v9/Astaro ASG v8 log lines to text formats
 
 # This list is based on the fields in http.log from UTM-9.2 for pass/block plus error
+# Updated for ~9.5
 
 # use strict;
 
@@ -227,7 +228,7 @@ sub syslogbody_fixup {
 
 sub syslogbody2arr {
 # 	return (${$_[0]} =~ m/(?:id="(.*?)" )(?:severity="(.*?)" )(?:sys="(.*?)" )(?:sub="(.*?)" )(?:name="(.*?)" )?(?:action="(.*?)" )?(?:method="(.*?)" )?(?:fwrule="(.*?)" )?(?:initf="(.*?)" )?(?:outitf="(.*?)" )?(?:srcmac="(.*?)" )?(?:dstmac="(.*?)" )?(?:srcip="(.*?)" )?(?:dstip="(.*?)" )?(?:user="(.*?)" )?(?:statuscode="(.*?)" )?(?:cached="(.*?)" )?(?:profile="(.*?)" )?(?:filteraction="(.*?)" )?(?:size="(.*?)" )?(?:request="(.*?)" )?(?:url="(.*?)" )?(?:exceptions="(.*?)" )?(?:error="(.*?)" ?)?(?:authtime="(.*?)" )?(?:dnstime="(.*?)" )?(?:cattime="(.*?)" )?(?:avscantime="(.*?)" )?(?:fullreqtime="(.*?)" )?(?:device="(.*?)" )?(?:auth="(.*?)" )?(?:reason="(.*?)" ?)?(?:category="(.*?)" )?(?:reputation="(.*?)" )?(?:categoryname="(.*?)" ?)?(?:extension="(.*?)" )?(?:filename="(.*?)" ?)?(?:content-type="(.*?)" ?)?(?:application="(.*?)" ?)?(?:function="(.*?)" )?(?:file="(.*?)" )?(?:line="(.*?)" )?(?:caller="(.*?)" )?(?:engine="(.*?)" ?)?(?:sid="(.*?)" ?)?(?:facility="(.*?)" ?)?(?:client="(.*?)" ?)?(?:call="(.*?)" ?)?(?:lock="(.*?)" ?)?(?:storage="(.*?)" ?)?(?:message="(.*?)" ?)?(.*?)$/o);	#(.*?)$
-	return (${$_[0]} =~ m/(?:id="(.*?)" )(?:severity="(.*?)" )(?:sys="(.*?)" )(?:sub="(.*?)" )(?:name="(.*?)" )?(?:action="(.*?)" )?(?:method="(.*?)" )?(?:fwrule="(.*?)" )?(?:initf="(.*?)" )?(?:outitf="(.*?)" )?(?:srcmac="(.*?)" )?(?:dstmac="(.*?)" )?(?:srcip="(.*?)" )?(?:dstip="(.*?)" )?(?:user="(.*?)" )?(?:ad_domain="(.*?)" )?(?:statuscode="(.*?)" )?(?:cached="(.*?)" )?(?:profile="(.*?)" )?(?:filteraction="(.*?)" )?(?:size="(.*?)" )?(?:request="(.*?)" )?(?:url="(.*?)" )?(?:referer="(.*?)" )?(?:error="(.*?)" ?)?(?:authtime="(.*?)" )?(?:dnstime="(.*?)" )?(?:cattime="(.*?)" )?(?:avscantime="(.*?)" )?(?:fullreqtime="(.*?)" )?(?:device="(.*?)" )?(?:auth="(.*?)" )?(?:ua="(.*?)" )?(?:exceptions="(.*?)" )?(?:overridecategory="(.*?)" )?(?:overridereputation="(.*?)" )?(?:reason="(.*?)" ?)?(?:category="(.*?)" )?(?:reputation="(.*?)" )?(?:categoryname="(.*?)" ?)?(?:extension="(.*?)" )?(?:filename="(.*?)" ?)?(?:content-type="(.*?)" ?)?(?:application="(.*?)" ?)?(?:app-id="(.*?)" ?)?(?:sid="(.*?)" ?)?(?:facility="(.*?)" ?)?(?:client="(.*?)" ?)?(?:pid="(.*?)" )?(?:call="(.*?)" ?)?(?:result="(.*?)" ?)?(?:lock="(.*?)" ?)?(?:storage="(.*?)" ?)?(?:function="(.*?)" )?(?:file="(.*?)" )?(?:line="(.*?)" )?(?:caller="(.*?)" )?(?:engine="(.*?)" ?)?(?:proto="(.*?)" )?(?:length="(.*?)" )?(?:tos="(.*?)" )?(?:prec="(.*?)" )?(?:ttl="(.*?)" )?(?:srcport="(.*?)" )?(?:dstport="(.*?)" )?(?:tcpflags="(.*?)" )?(?:type="(.*?)" )?(?:code="(.*?)" )?(?:message="(.*?)" ?)?(.*?) *$/o);	#(.*?)$
+	return (${$_[0]} =~ m/(?:id="(.*?)" )(?:severity="(.*?)" )(?:sys="(.*?)" )(?:sub="(.*?)" )(?:name="(.*?)" )?(?:action="(.*?)" )?(?:method="(.*?)" )?(?:fwrule="(.*?)" )?(?:initf="(.*?)" )?(?:outitf="(.*?)" )?(?:srcmac="(.*?)" )?(?:dstmac="(.*?)" )?(?:srcip="(.*?)" )?(?:dstip="(.*?)" )?(?:user="(.*?)" )?(?:group="(.*?)" )?(?:ad_domain="(.*?)" )?(?:statuscode="(.*?)" )?(?:cached="(.*?)" )?(?:profile="(.*?)" )?(?:filteraction="(.*?)" )?(?:size="(.*?)" )?(?:request="(.*?)" )?(?:url="(.*?)" )?(?:referer="(.*?)" )?(?:error="(.*?)" ?)?(?:authtime="(.*?)" )?(?:dnstime="(.*?)" )?(?:cattime="(.*?)" )?(?:avscantime="(.*?)" )?(?:fullreqtime="(.*?)" )?(?:device="(.*?)" )?(?:auth="(.*?)" )?(?:ua="(.*?)" )?(?:exceptions="(.*?)" )?(?:overridecategory="(.*?)" )?(?:overridereputation="(.*?)" )?(?:reason="(.*?)" ?)?(?:category="(.*?)" )?(?:reputation="(.*?)" )?(?:categoryname="(.*?)" ?)?(?:extension="(.*?)" )?(?:filename="(.*?)" ?)?(?:content-type="(.*?)" ?)?(?:application="(.*?)" ?)?(?:app-id="(.*?)" ?)?(?:sid="(.*?)" ?)?(?:facility="(.*?)" ?)?(?:client="(.*?)" ?)?(?:pid="(.*?)" )?(?:call="(.*?)" ?)?(?:result="(.*?)" ?)?(?:lock="(.*?)" ?)?(?:storage="(.*?)" ?)?(?:function="(.*?)" )?(?:file="(.*?)" )?(?:line="(.*?)" )?(?:caller="(.*?)" )?(?:engine="(.*?)" ?)?(?:proto="(.*?)" )?(?:length="(.*?)" )?(?:tos="(.*?)" )?(?:prec="(.*?)" )?(?:ttl="(.*?)" )?(?:srcport="(.*?)" )?(?:dstport="(.*?)" )?(?:tcpflags="(.*?)" )?(?:type="(.*?)" )?(?:code="(.*?)" )?(?:message="(.*?)" ?)?(.*?) *$/o);	#(.*?)$
 }
 
 sub syslog2csv {
@@ -281,7 +282,7 @@ sub log2txt_test {
 	# test syslog2hash
 	my (%d, @k, $s, $kc);
 	# @k = ('ts', 'host', 'proc', 'id', 'severity', 'sys', 'sub', 'name', 'action', 'method', 'srcip', 'dstip', 'user', 'statuscode', 'cached', 'profile', 'filteraction', 'size', 'request', 'url', 'exceptions', 'error', 'authtime', 'dnstime', 'cattime', 'avscantime', 'fullreqtime', 'device', 'auth', 'extension', 'filename', 'reason', 'category', 'reputation', 'categoryname', 'content-type', 'application', 'function', 'file', 'line', 'caller', 'engine', 'message', 'msg');
-	@k = ('ts', 'host', 'proc', 'id', 'severity', 'sys', 'sub', 'name', 'action', 'method', 'fwrule', 'initf', 'outitf', 'srcmac', 'dstmac', 'srcip', 'dstip', 'user', 'ad_domain', 'statuscode', 'cached', 'profile', 'filteraction', 'size', 'request', 'url', 'referer', 'error', 'authtime', 'dnstime', 'cattime', 'avscantime', 'fullreqtime', 'device', 'auth', 'ua', 'exceptions', 'overridecategory', 'overridereputation', 'reason', 'category', 'reputation', 'categoryname', 'extension', 'filename', 'content-type', 'application', 'app-id', 'sid', 'facility', 'client', 'pid', 'call', 'result', 'lock', 'storage', 'function', 'file', 'line', 'caller', 'engine', 'proto', 'length', 'tos', 'prec', 'ttl', 'srcport', 'dstport', 'tcpflags', 'type', 'code', 'message', 'msg');
+	@k = ('ts', 'host', 'proc', 'id', 'severity', 'sys', 'sub', 'name', 'action', 'method', 'fwrule', 'initf', 'outitf', 'srcmac', 'dstmac', 'srcip', 'dstip', 'user', 'group', 'ad_domain', 'statuscode', 'cached', 'profile', 'filteraction', 'size', 'request', 'url', 'referer', 'error', 'authtime', 'dnstime', 'cattime', 'avscantime', 'fullreqtime', 'device', 'auth', 'ua', 'exceptions', 'overridecategory', 'overridereputation', 'reason', 'category', 'reputation', 'categoryname', 'extension', 'filename', 'content-type', 'application', 'app-id', 'sid', 'facility', 'client', 'pid', 'call', 'result', 'lock', 'storage', 'function', 'file', 'line', 'caller', 'engine', 'proto', 'length', 'tos', 'prec', 'ttl', 'srcport', 'dstport', 'tcpflags', 'type', 'code', 'message', 'msg');
 # 	print join(',', @k), "\n";
 # 	print '"', join('","', @k), "\"\n";
 	print '"', join('"	"', @k), "\"\n";
